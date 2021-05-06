@@ -1,0 +1,161 @@
+<div class="container">
+  <div class="col-md-6 offset-md-3 text-center">
+    <ngb-toast
+      *ngIf="show"
+      [delay]="5000"
+      [autohide]="true"
+      (hidden)="show = false"
+    >
+      Covid vaccination slots not available
+    </ngb-toast>
+  </div>
+
+  <nav class="mt-2">
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button
+        class="nav-link active"
+        id="nav-home-tab"
+        data-bs-toggle="tab"
+        data-bs-target="#nav-home"
+        type="button"
+        role="tab"
+        aria-controls="nav-home"
+        aria-selected="true"
+      >
+        Search By District
+      </button>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div
+      class="tab-pane fade show active"
+      id="nav-home"
+      role="tabpanel"
+      aria-labelledby="nav-home-tab"
+    >
+      <div class="row mt-2">
+        <label for="staticEmail" class="col-md-2 col-form-label"
+          >Availability Date</label
+        >
+        <div class="col-md-3">
+          <form class="form-inline">
+            <div class="form-group">
+              <div class="input-group">
+                <input
+                  autocomplete="off"
+                  class="form-control"
+                  placeholder="yyyy-mm-dd"
+                  name="dp"
+                  [(ngModel)]="availabilityDate"
+                  ngbDatepicker
+                  #d="ngbDatepicker"
+                  [minDate]="minDate"
+                  [maxDate]="maxDate"
+                  (dateSelect)="onDateChange()"
+                />
+                <button
+                  class="btn btn-outline-primary"
+                  (click)="d.toggle()"
+                  type="button"
+                >
+                  <i i-bs name="calendar2"></i>
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+        <label for="staticEmail" class="col-md-2 col-form-label"
+          >District</label
+        >
+        <div class="col-md-3">
+          <select
+            name="ddlDistrict"
+            class="form-select"
+            aria-label="Select district"
+            (change)="onDistrictChange($event.target.value)"
+            [(ngModel)]="selectedDistrict"
+          >
+            <option value="-1">--Select--</option>
+            <option *ngFor="let item of districts" [value]="item.district_id">
+              {{ item.district_name }}
+            </option>
+          </select>
+        </div>
+      </div>
+      <div class="card mt-2" *ngIf="recordsFound">
+        <div class="card-header">
+          <input
+            type="text"
+            placeholder="Search Filter"
+            [(ngModel)]="searchTerm"
+            class="form-control"
+          />
+        </div>
+        <div class="card-body">
+          <div class="row mt-2">
+            <ngb-accordion #acc="ngbAccordion">
+              <ngb-panel
+                id="toggle-{{ item.center_id }}"
+                title="{{ item.name | uppercase }} ({{ item.from }} - {{
+                  item.to
+                }} )"
+                *ngFor="let item of availableSessions | filter: searchTerm"
+              >
+                <ng-template ngbPanelContent>
+                  <div class="row">
+                    <div class="col-md-2 headerText">Center Name</div>
+                    <div class="col-md-6">{{ item.name | uppercase }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2 headerText">State</div>
+                    <div class="col-md-2">
+                      {{ item.state_name }}
+                    </div>
+                    <div class="col-md-2 headerText">District</div>
+                    <div class="col-md-2">
+                      {{ item.district_name }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2 headerText">Block</div>
+                    <div class="col-md-2">
+                      {{ item.block_name }}
+                    </div>
+                    <div class="col-md-2 headerText">Pincode</div>
+                    <div class="col-md-2">
+                      {{ item.pincode }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2 headerText">Vaccine</div>
+                    <div class="col-md-2">
+                      {{ item.vaccine }}
+                    </div>
+                    <div class="col-md-2 headerText">Fees</div>
+                    <div class="col-md-2">
+                      {{ item.fee }} {{ item.fee_type }}
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2 headerText">Available Capacity</div>
+                    <div class="col-md-2">{{ item.available_capacity }}</div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-2 headerText">Min.Age</div>
+                    <div class="col-md-2">{{ item.min_age_limit }}</div>
+                    <div class="col-md-2 headerText">Slots</div>
+                    <div class="col-md-6">
+                      <ul>
+                        <li *ngFor="let slot of item.slots">{{ slot }}</li>
+                      </ul>
+                    </div>
+                  </div>
+                </ng-template>
+              </ngb-panel>
+            </ngb-accordion>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
