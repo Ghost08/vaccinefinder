@@ -66,7 +66,8 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "covid-vaccine-tracker:build:production"
+              "browserTarget": "covid-vaccine-tracker:build:production",
+              "proxyConfig": "proxy.conf.json"
             }
           }
         },
